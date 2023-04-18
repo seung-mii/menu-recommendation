@@ -1,6 +1,7 @@
 package com.example.brand.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.brand.model.Member;
@@ -25,5 +26,15 @@ public class MemberService {
 		}
 
 		return MemberRepository.save(Member);
+	}
+
+	public Member getByCredentials(final String userID, final String password, final PasswordEncoder encoder) {
+		final Member originalUser = MemberRepository.findByUserID(userID);
+
+		if (originalUser != null && encoder.matches(password, originalUser.getPassword())) {
+			return originalUser;
+		}
+
+		return null;
 	}
 }

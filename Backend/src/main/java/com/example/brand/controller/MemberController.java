@@ -1,8 +1,5 @@
 package com.example.brand.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.brand.dto.ResponseDTO;
 import com.example.brand.dto.MemberDTO;
 import com.example.brand.model.Member;
+import com.example.brand.security.TokenProvider;
 import com.example.brand.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	@Autowired
 	private MemberService MemberService;
+
+	@Autowired
+	private TokenProvider tokenProvider;
 
 	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -50,6 +51,31 @@ public class MemberController {
 			return ResponseEntity.ok().body(responseMemberDTO);
 		} catch (Exception e) {
 			ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+			return ResponseEntity.badRequest().body(responseDTO);
+		}
+	}
+
+	@PostMapping("/signin")
+	public ResponseEntity<?> authenticate(@RequestBody MemberDTO MemberDTO) {
+		Member user = MemberService.getByCredentials(MemberDTO.getUserID(), MemberDTO.getPassword(), passwordEncoder);
+
+		if (user != null) {
+			final String token = tokenProvider.create(user);
+			final MemberDTO responseMemberDTO = MemberDTO.builder()
+					.name(user.getName())
+					.userID(user.getUserID())
+					.m_key(user.getM_key())
+					.password(passwordEncoder.encode(MemberDTO.getPassword()))
+					.phone(user.getPhone())
+					.nickname(user.getNickname())
+					.token(token)
+					.build();
+
+			return ResponseEntity.ok().body(responseMemberDTO);
+		} else {
+			ResponseDTO responseDTO = ResponseDTO.builder()
+					.error("Login failed")
+					.build();
 			return ResponseEntity.badRequest().body(responseDTO);
 		}
 	}
