@@ -1,45 +1,89 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { signin } from "../../service/ApiService";
 import styled from "styled-components";
 
-function Signin() {
-  const [pwState, setPwState] = useState(false);
-
-  const toggleIsOn = () => {
-    setPwState(!pwState);
+class Signin extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      showPassword: false
+    };
   }
 
-  return (
-    <Container>
-      <Form>
-        <Div $id>
-          <Title>ID</Title>
-          <Input type="text" placeholder="아이디를 입력하세요."/>
-        </Div>
-        <Div>
-          <Title>PW</Title>
-          {pwState ? (
-            <Input type="text" placeholder="비밀번호를 입력하세요."/>
+  handleSubmit(event) {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const userID = data.get("userID");
+    const password = data.get("password");
+
+    // ApiService의 signin 메소드를 사용해 로그인
+    signin({ userID: userID, password: password }).then(
+      (response) => {
+        localStorage.setItem("userID", userID);
+        window.location.href = "/";
+      }
+    );
+  }
+
+  toggleIsActive = () => {
+    this.setState({showPassword: !this.state.showPassword});
+  };
+
+  render() {
+    const thisPwd = this.state.showPassword;
+    
+    return(
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
+          <Div $id>
+            <Title>ID</Title>
+            <Input 
+              required
+              id="userID" 
+              name="userID" 
+              type="text" 
+              placeholder="아이디를 입력하세요." 
+            />
+          </Div>
+          <Div>
+            <Title>PW</Title>
+            {thisPwd ? (
+              <Input 
+                required
+                id="password" 
+                name="password" 
+                type="text" 
+                placeholder="비밀번호를 입력하세요." 
+              />
             ) : (
-            <Input type="password" placeholder="비밀번호를 입력하세요."/>
-          )}
-          {pwState ? (
-            <Icon className="material-symbols-outlined" onClick={toggleIsOn}> visibility </Icon>
+              <Input 
+                required
+                id="password" 
+                name="password" 
+                type="password" 
+                placeholder="비밀번호를 입력하세요." 
+              />
+            )}
+            {thisPwd ? (
+              <Icon className="material-symbols-outlined" onClick={this.toggleIsActive}> visibility </Icon>
             ) : (
-            <Icon className="material-symbols-outlined" onClick={toggleIsOn}> visibility_off </Icon>
-          )}
-        </Div>
-        <Button> 완료 </Button>
-        <Button $primary> 취소 </Button>
-        <Link
-          to="/signup"
-          style={{ color: "#6c8074", marginLeft: "350px", textDecoration: "none"}}
-        >
-          Sign up &rang;
-        </Link>
-      </Form>
-    </Container>
-  );
+              <Icon className="material-symbols-outlined" onClick={this.toggleIsActive}> visibility_off </Icon>
+            )}
+          </Div>
+          <Button type="submit"> 완료 </Button>
+          <Link to="/"><Button $primary> 취소 </Button></Link>
+          <Link
+            to="/signup"
+            style={{ color: "#6c8074", marginLeft: "350px", textDecoration: "none" }}
+          >
+            Sign up &rang;
+          </Link>
+        </Form>
+      </Container>
+    )
+  }
 }
 
 const Container = styled.div`
