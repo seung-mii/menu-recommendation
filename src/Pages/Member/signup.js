@@ -1,95 +1,141 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { signup } from '../../service/ApiService';
 import styled from "styled-components";
 
-function Signup() {
-  const [pwState, setPwState] = useState(false);
-
-  const toggleIsOn = () => {
-    setPwState(!pwState);
+class Signup extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      showPassword: false,
+      user: false
+    };
   }
 
-  // const useConfirm = (message = null, onConfirm, onCancel) => {
-  //   if (!onConfirm || typeof onConfirm !== "function") {
-  //     return  <Link to="/"></Link>;
-  //   }
-  //   if (onCancel && typeof onCancel !== "function") {
-  //     return;
-  //   }
+  handleSubmit(event) {
+    event.preventDefault();
+    
+    const data = new FormData(event.target);
+    const userID = data.get("userID");
+    const password = data.get("password");
+    const name = data.get("name");
+    const nickname = data.get("nickname");
+    const phone = data.get("phone");
 
-  //   const confirmAction = () => {
-  //     if (window.confirm(message)) {
-  //       onConfirm();
-  //     } else {
-  //       onCancel();
-  //     }
-  //   };
+    // ApiService의 signin 메소드를 사용해 로그인
+    signup({ userID: userID, password: password, name: name, nickname: nickname, phone: phone }).then(
+      (response) => {
+        window.location.href = "/login";
+      }
+    );
+  }
 
-  //   return confirmAction;
-  // };
+  toggleIsActive = () => {
+    this.setState({showPassword: !this.state.showPassword});
+  };
 
-  // const modifyConfirm = () => {
-  //   console.log("수정했습니다.");
-  // }
-  // const cancelConfirm = () => {
-  //   console.log("취소했습니다.");
-  // }
+  onUserClick = () => {
+    this.setState({ user: true });
+  }
+  onRepresentativeClick = () => {
+    this.setState({ user: false });
+  }
+  
+  render() {
+    const thisPwd = this.state.showPassword;
+    const IsUser = this.state.user;
 
-  // const confirmModify = useConfirm(
-  //   "수정하시겠습니까?",
-  //   modifyConfirm,
-  //   cancelConfirm
-  // );
-
-  // const confirmCancel = useConfirm(
-  //   "취소하시겠습니까?",
-  //   modifyConfirm,
-  //   cancelConfirm
-  // );
-
-  return (
-    <Container>
-      <Form>
-        <Div $id>
-          <Title>ID</Title>
-          <Input type="text" placeholder="아이디를 입력하세요."/>
-        </Div>
-        <Div>
-          <Title>PW</Title>
-          {pwState ? (
-            <Input type="text" placeholder="비밀번호를 입력하세요."/>
-            ) : (
-            <Input type="password" placeholder="비밀번호를 입력하세요."/>
+    return (
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
+          <Div $top>
+            <Q>어떤 입장으로 회원가입을 하실 건가요?</Q>
+            <Button onClick={this.onUserClick} style={{ margin: "7px", width: "75px", fontSize: "15px"}}> 사용자 </Button>
+            <Button onClick={this.onRepresentativeClick} style={{ margin: "7px", width: "75px", fontSize: "15px"}}> 점주 </Button>
+          </Div>
+          <Div>
+            <Title>ID</Title>
+            <Input 
+              required
+              name="userID" 
+              id="userID" 
+              type="text" 
+              placeholder="아이디를 입력하세요."
+            />
+          </Div>
+          <Div>
+            <Title>PW</Title>
+            {thisPwd ? (
+              <Input
+                required
+                name="password" 
+                id="password" 
+                type="text" 
+                placeholder="비밀번호를 입력하세요."
+              />
+              ) : (
+              <Input 
+                required
+                name="password" 
+                id="password" 
+                type="password" 
+                placeholder="비밀번호를 입력하세요."
+              />
+            )}
+            {thisPwd ? (
+              <Icon className="material-symbols-outlined" onClick={this.toggleIsActive}> visibility </Icon>
+              ) : (
+              <Icon className="material-symbols-outlined" onClick={this.toggleIsActive}> visibility_off </Icon>
+            )}
+          </Div>
+          <Div>
+            <Title>NAME</Title>
+            <Input 
+              required
+              name="name" 
+              id="name" 
+              type="text" 
+              placeholder="성명을 입력하세요."
+            />
+          </Div>
+          {IsUser ? (
+            <Div>
+              <Title>NICKNAME</Title>
+              <Input 
+                required
+                name="nickname" 
+                id="nickname" 
+                type="text" 
+                placeholder="닉네임을 입력하세요."
+              />
+            </Div>
+          ) : (
+              <></>
           )}
-          {pwState ? (
-            <Icon className="material-symbols-outlined" onClick={toggleIsOn}> visibility </Icon>
-            ) : (
-            <Icon className="material-symbols-outlined" onClick={toggleIsOn}> visibility_off </Icon>
-          )}
-        </Div>
-        <Div>
-          <Title>NAME</Title>
-          <Input type="text" placeholder="성명을 입력하세요."/>
-        </Div>
-        <Div>
-          <Title>NICKNAME</Title>
-          <Input type="text" placeholder="닉네임을 입력하세요."/>
-        </Div>
-        <Div>
-          <Title>PHONE</Title>
-          <Input type="number" maxLength='11' placeholder="연락처를 입력하세요." />
-        </Div>
-        <Button> 완료 </Button>
-        <Button $primary> 취소 </Button>
-        <Link
-          to="/login"
-          style={{ color: "#6c8074", marginLeft: "440px", textDecoration: "none"}}
-        >
-          Log in &rang;
-        </Link>
-      </Form>
-    </Container>
-  );
+          <Div>
+            <Title>PHONE</Title>
+            <Input 
+              required
+              name="phone" 
+              id="phone" 
+              type="text" 
+              maxLength='11'
+              placeholder="연락처를 입력하세요."
+            />
+          </Div>
+          <Button type="submit"> 완료 </Button>
+          <Link to="/"><Button $primary> 취소 </Button></Link>
+          <Link
+            to="/login"
+            style={{ color: "#6c8074", marginLeft: "440px", textDecoration: "none"}}
+          >
+            Log in &rang;
+          </Link>
+        </Form>
+      </Container>
+    );
+  }
 }
 
 const Container = styled.div`
@@ -100,13 +146,19 @@ const Div = styled.div`
   position: relative;
   display: flex;
   margin: 20px 30px 30px 30px;
-  margin-top: ${props => props.$id ? "80px" : "0px"};
-  justify-content: space-between;
+  margin-top: ${props => props.$top ? "80px" : "0px"};
+  justify-content: ${props => props.$top ? "none" : "space-between"};
 `
 
 const Form = styled.form`
   width: 510px;
   margin: 0 auto;
+`
+
+const Q = styled.p`
+  color: #6c8074;
+  margin-right: 13px;
+  padding: 5px;
 `
 
 const Title = styled.h3`
