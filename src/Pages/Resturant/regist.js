@@ -1,85 +1,148 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { call } from '../../service/ApiService';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 
-function Regist() {
-  const [pwState, setPwState] = useState(false);
-
-  const toggleIsOn = () => {
-    setPwState(!pwState);
+class Regist extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = { item: {} };
   }
 
-  // const useConfirm = (message = null, onConfirm, onCancel) => {
-  //   if (!onConfirm || typeof onConfirm !== "function") {
-  //     return  <Link to="/"></Link>;
-  //   }
-  //   if (onCancel && typeof onCancel !== "function") {
-  //     return;
-  //   }
+  handleSubmit(event) {
+    event.preventDefault();
 
-  //   const confirmAction = () => {
-  //     if (window.confirm(message)) {
-  //       onConfirm();
-  //     } else {
-  //       onCancel();
-  //     }
-  //   };
+    call("/frestaurant", "POST", this.state.item).then((response) => 
+      this.setState({items:response.data}),
+      window.location.href = "/"
+    );
+  }
 
-  //   return confirmAction;
-  // };
+  onInputRestaurantChange = (e) => {
+    const thisItem = this.state.item;
+    thisItem.brand = e.target.value;
+    this.setState({ item: thisItem });
+  }
+  onInputNameChange = (e) => {
+    const thisItem = this.state.item;
+    thisItem.name = e.target.value;
+    this.setState({ item: thisItem });
+  }
+  onInputMenuChange = (e) => {
+    const thisItem = this.state.item;
+    thisItem.menu = e.target.value;
+    this.setState({ item: thisItem });
+  }
+  onInputExplanationChange = (e) => {
+    const thisItem = this.state.item;
+    thisItem.explanation = e.target.value;
+    this.setState({ item: thisItem });
+  }
+  onInputPriceChange = (e) => {
+    const thisItem = this.state.item;
+    thisItem.price = e.target.value;
+    this.setState({ item: thisItem });
+  }
+  onInputLocationChange = (e) => {
+    const thisItem = this.state.item;
+    thisItem.location = e.target.value;
+    this.setState({ item: thisItem });
+  }
+  onInputContactChange = (e) => {
+    const thisItem = this.state.item;
+    thisItem.contact = e.target.value;
+    this.setState({ item: thisItem });
+  }
 
-  // const modifyConfirm = () => {
-  //   console.log("수정했습니다.");
-  // }
-  // const cancelConfirm = () => {
-  //   console.log("취소했습니다.");
-  // }
-
-  // const confirmModify = useConfirm(
-  //   "수정하시겠습니까?",
-  //   modifyConfirm,
-  //   cancelConfirm
-  // );
-
-  // const confirmCancel = useConfirm(
-  //   "취소하시겠습니까?",
-  //   modifyConfirm,
-  //   cancelConfirm
-  // );
-  
-  return (
-    <Container>
-      <Form>
-        <Div $>
-          <Title>Name of restaurant</Title>
-          <Input type="text" placeholder="상호명을 입력하세요."/>
-        </Div>
-        <Div>
-          <Title>Name of Representative</Title>
-          <Input type="text" placeholder="대표자 성명을 입력하세요."/>
-        </Div>
-        <Div $menu>
-          <Menu>
-            <Title>Menu</Title>
-            <Title $name>Name</Title>
-            <InputMenu type="text" placeholder="대표 메뉴를 입력하세요."/>
-            <Title>Price</Title>
-            <InputMenu $price type="number" placeholder="가격을 입력하세요." />
-          </Menu> 
-        </Div>
-        <Div>
-          <Title>Location</Title>
-          <Input type="text" placeholder="위치를 입력하세요."/>
-        </Div>
-        <Div>
-          <Title>Restaurant Number</Title>
-          <Input type="number" maxLength='11' placeholder='맛집의 전화번호를 입력하세요.'/>
-        </Div>
-        <Button $complete> 완료 </Button>
-        <Link to = "/"><Button $primary> 취소 </Button></Link>
-      </Form>
-    </Container>
-  );
+  render() {
+    return (
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
+          <Div $>
+            <Title>Name of restaurant</Title>
+            <Input 
+              required
+              id="brand"
+              name="brand"
+              type="text" 
+              placeholder="상호명을 입력하세요." 
+              value={this.state.item.brand}
+              onChange={this.onInputRestaurantChange}/>
+          </Div>
+          <Div>
+            <Title>Name of Representative</Title>
+            <Input 
+              required
+              id="name"
+              name="name"
+              type="text" 
+              placeholder="대표자 성명을 입력하세요." 
+              value={this.state.item.name}
+              onChange={this.onInputNameChange}/>
+          </Div>
+          <Div $menu>
+            <Menu>
+              <Title>Menu</Title>
+              <Title $name>Name</Title>
+              <InputMenu 
+                required
+                id="menu"
+                name="menu"
+                type="text" 
+                placeholder="대표 메뉴를 입력하세요." 
+                value={this.state.item.menu}
+                onChange={this.onInputMenuChange}/>
+              <Title>Price</Title>
+              <InputMenu $price
+                required
+                id="price"
+                name="price"
+                type="number" 
+                placeholder="가격을 입력하세요."  
+                value={this.state.item.price}
+                onChange={this.onInputPriceChange}/>
+            </Menu> 
+          </Div>
+          <Div>
+            <Title>Explanation</Title>
+            <Input 
+              required
+              id="explanation"
+              name="explanation"
+              type="text" 
+              placeholder="대표 메뉴를 간단하게 설명하세요." 
+              value={this.state.item.explanation}
+              onChange={this.onInputExplanationChange}/>
+          </Div>
+          <Div>
+            <Title>Location</Title>
+            <Input 
+              required
+              id="location"
+              name="location"
+              type="text" 
+              placeholder="위치를 입력하세요." 
+              value={this.state.item.location}
+              onChange={this.onInputLocationChange}/>
+          </Div>
+          <Div>
+            <Title>Restaurant Number</Title>
+            <Input 
+              required
+              id="contact"
+              name="contact"
+              type="number" maxLength='12' 
+              placeholder='맛집의 전화번호를 입력하세요.' 
+              value={this.state.item.contact}
+              onChange={this.onInputContactChange}/>
+          </Div>
+          <Button $complete type="submit"> 완료 </Button>
+          <Link to="/"><Button $primary> 취소 </Button></Link>
+        </Form>
+      </Container>
+    )
+  }
 }
 
 const Container = styled.div`
@@ -131,10 +194,6 @@ const Input = styled.input`
   border-radius: 1ch;
   border: 1px solid #6c8074;
 `
-
-// const Input = styled.input:focus`
-//   outline: none;
-// `
 
 const InputMenu = styled.input`
   width: 160px;
