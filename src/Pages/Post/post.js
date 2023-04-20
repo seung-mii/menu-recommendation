@@ -1,132 +1,97 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { call } from '../../service/ApiService';
+import rose from '../../images/로제떡볶이.jpeg';
+import rose1 from '../../images/로제.png';
+import rose2 from '../../images/로제2.png';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 
-function Post() {
-  const [pwState, setPwState] = useState(false);
-
-  const toggleIsOn = () => {
-    setPwState(!pwState);
+class Post extends React.Component {
+  constructor(props) { 
+    super(props);      
+    this.state = { items: [] };
   }
 
-  // const useConfirm = (message = null, onConfirm, onCancel) => {
-  //   if (!onConfirm || typeof onConfirm !== "function") {
-  //     return  <Link to="/"></Link>;
-  //   }
-  //   if (onCancel && typeof onCancel !== "function") {
-  //     return;
-  //   }
+  componentDidMount() {
+    call("/post/all", "GET", null).then((response) =>
+      this.setState({ items: response.data })
+    );
+  }
 
-  //   const confirmAction = () => {
-  //     if (window.confirm(message)) {
-  //       onConfirm();
-  //     } else {
-  //       onCancel();
-  //     }
-  //   };
+  render() {
+    const thisItem = this.state.items;
+    const photoArr = [ rose, rose1, rose2 ]; 
 
-  //   return confirmAction;
-  // };
-
-  // const modifyConfirm = () => {
-  //   console.log("수정했습니다.");
-  // }
-  // const cancelConfirm = () => {
-  //   console.log("취소했습니다.");
-  // }
-
-  // const confirmModify = useConfirm(
-  //   "완료하시겠습니까?",
-  //   modifyConfirm,
-  //   cancelConfirm
-  // );
-
-  return (
-    <Container>
-      <Form>
-        <Div $title>
-          <Title>Title</Title>
-          <Input type="text" placeholder="제목을 입력하세요."/>
-        </Div>
-        <Div>
-          <Title>Contents</Title>
-        </Div>
-        <Div>
-          <Textarea type="text" placeholder="내용을 입력하세요."></Textarea>
-        </Div>
-        <Button $complete> 완료 </Button>
-        <Link to="/"><Button $primary> 취소 </Button></Link>
-      </Form>
-    </Container>
-  );
+    return (
+      <Container>
+        <Table $top>
+          <Tr>
+            <Th style={{width: "30%"}}>제목</Th>
+            <Th>내용</Th>
+          </Tr>
+          {thisItem.length > 0 && thisItem.map((item, idx) => (
+            <Tr>
+              <Td>
+                <Img src={photoArr[(idx+1)%3]}></Img>
+                <Title>{item.title}</Title>
+              </Td>
+              <Td>
+                <Contents>{item.contents}</Contents>
+              </Td>
+            </Tr>
+          ))}
+        </Table>
+      </Container>
+    );
+  }
 }
 
 const Container = styled.div`
   list-style: none;
   text-decoration: none;
-  font-family: 'Titan One', 'cursive';
 `
 
-const Div = styled.div`
-  position: relative;
-  display: flex;
-  margin: 20px;
-  margin-top: ${props => props.$title ? "80px" : "0px"};
-  justify-content: space-between;
-`
-
-const Form = styled.form`
-  width: 800px;
+const Table = styled.table`
+  width: 100%;
+  height: 300px;
   margin: 0 auto;
+  margin-Top: 45px;
+  font-size: 22px;
+  color: #667c6e;
+`
+
+const Th = styled.th`
+  border-top: 2px solid #6c8074;
+  border-bottom: 2px solid #6c8074;
+  border-right: 2px solid #6c8074;
+  border-collapse: collapse;
+  background-color: #bbd6b83b;
+`
+
+const Tr = styled.tr`
+`
+
+const Td = styled.td`
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  border-right: 2px solid #6c8074;
+  border-bottom: 2px solid #6c8074;
 `
 
 const Title = styled.h3`
   margin: 0px;
-  padding: 0px;
-  color: #6c8074;
-  padding-top: 10px;
-  font-size: 23px;
-  font-weight: 100;
-  vertical-align: middle;
+  padding: 5px 5px 0px 5px;
 `
 
-const Input = styled.input`
-  width: 640px;
-  height: 35px;
-  outline: none;
+const Img = styled.img`
+  width: 100px;
+`
+
+const Contents = styled.p`
+  margin: 0px;
+  padding: 5px;
   font-size: 17px;
-  font-weight: 400;
-  padding: 5px 15px 5px 15px;
-  margin-left: 16px;
-  border-radius: 1ch;
-  border: 1px solid #6c8074;
-`
-
-const Textarea = styled.textarea`
-  width: 100%;
-  height: 400px;
-  outline: none;
-  font-size: 17px;
-  font-weight: 400;
-  padding: 15px;
-  border-radius: 1ch;
-  border: 1px solid #6c8074;
-`
-
-const Button = styled.button`
-  color: ${props => props.$primary ? "#6c8074" : "white"};
-  background: ${props => props.$primary ? "white" : "#6c8074"};
-
-  width: 90px;
-  height: 42px;
-  padding: 10px;
-  margin: ${props => props.$complete ? "20px 20px 20px 295px" : "20px"};
-  font-size: 16px;
-  font-weight: 600;
-  text-align: center;
-  border: 2px solid #6c8074;
-  border-radius: 4px;
-  cursor: pointer;
 `
 
 export default Post;

@@ -5,7 +5,8 @@ import Modify from './Pages/Member/modify';
 import Signin from './Pages/Member/signin';
 import Signup from './Pages/Member/signup';
 import Post from './Pages/Post/post';
-import Rating from './Pages/Rating/rating';
+import PostRegist from './Pages/Post/postRegist';
+import PostModify from './Pages/Post/postModify';
 import Regist from './Pages/Resturant/regist';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -18,8 +19,9 @@ function App() {
         <Route path="/modify" element={<Modify />}></Route>
         <Route path="/login" element={<Signin />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
+        <Route path="/post/:id" element={<PostRegist />}></Route>
         <Route path="/post" element={<Post />}></Route>
-        <Route path="/rating" element={<Rating />}></Route>
+        <Route path="/postmodify/:id" element={<PostModify />}></Route>
         <Route path="/regist" element={<Regist />}></Route>
       </Routes>
     </BrowserRouter>
