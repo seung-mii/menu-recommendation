@@ -8,6 +8,7 @@ import Post from './Pages/Post/post';
 import PostRegist from './Pages/Post/postRegist';
 import PostModify from './Pages/Post/postModify';
 import Star from './Pages/Star/star';
+import StarModify from './Pages/Star/starModify';
 import Regist from './Pages/Resturant/regist';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/post" element={<Post />}></Route>
         <Route path="/postmodify/:id" element={<PostModify />}></Route>
         <Route path="/star/:id" element={<Star />}></Route>
+        <Route path="/starmodify/:id" element={<StarModify />}></Route>
         <Route path="/regist" element={<Regist />}></Route>
       </Routes>
     </BrowserRouter>
