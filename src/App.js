@@ -7,6 +7,7 @@ import Signup from './Pages/Member/signup';
 import Post from './Pages/Post/post';
 import PostRegist from './Pages/Post/postRegist';
 import PostModify from './Pages/Post/postModify';
+import Star from './Pages/Star/star';
 import Regist from './Pages/Resturant/regist';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/post/:id" element={<PostRegist />}></Route>
         <Route path="/post" element={<Post />}></Route>
         <Route path="/postmodify/:id" element={<PostModify />}></Route>
+        <Route path="/star/:id" element={<Star />}></Route>
         <Route path="/regist" element={<Regist />}></Route>
       </Routes>
     </BrowserRouter>
