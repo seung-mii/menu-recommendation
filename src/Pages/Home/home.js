@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import { call } from '../../service/ApiService';
 import RestaurantList from './RestaurantList';
-import Signin from '../Member/signin';
+import Signin from '../Member/Signin';
 
-class home extends React.Component {
+class Home extends React.Component {
   constructor(props) {
     super(props);     
     this.state = {    
@@ -87,5 +87,5 @@ const RegistBtn = styled(Button)`
   margin: 0px 70px 0px 0px;
 `
 
-export default home;
+export default Home;
 

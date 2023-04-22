@@ -1,15 +1,15 @@
 import React from 'react';
-import Home from './Pages/Home/home';
-import Header from './Pages/Home/header';
-import Modify from './Pages/Member/modify';
-import Signin from './Pages/Member/signin';
-import Signup from './Pages/Member/signup';
-import Post from './Pages/Post/post';
-import PostRegist from './Pages/Post/postRegist';
-import PostModify from './Pages/Post/postModify';
-import Star from './Pages/Star/star';
-import StarModify from './Pages/Star/starModify';
-import Regist from './Pages/Resturant/regist';
+import Home from './Pages/Home/Home';
+import Header from './Pages/Home/Header';
+import Modify from './Pages/Member/Modify';
+import Signin from './Pages/Member/Signin';
+import Signup from './Pages/Member/Signup';
+import Post from './Pages/Post/Post';
+import PostRegist from './Pages/Post/PostRegist';
+import PostModify from './Pages/Post/PostModify';
+import Star from './Pages/Star/Star';
+import StarModify from './Pages/Star/StarModify';
+import Regist from './Pages/Resturant/Regist';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {

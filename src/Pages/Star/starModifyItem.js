@@ -3,7 +3,7 @@ import { call } from '../../service/ApiService';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 
-class starModifyItem extends React.Component {
+class StarModifyItem extends React.Component {
   constructor(props) { 
     super(props);      
     this.state = { item: props.items };
@@ -148,4 +148,4 @@ const Choice = styled.button`
   cursor: pointer;
 `
 
-export default starModifyItem;
+export default StarModifyItem;

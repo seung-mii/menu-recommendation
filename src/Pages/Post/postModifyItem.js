@@ -3,7 +3,7 @@ import { call } from '../../service/ApiService';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 
-class postModifyItem extends React.Component {
+class PostModifyItem extends React.Component {
   constructor(props) { 
     super(props);      
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -151,4 +151,4 @@ const Button = styled.button`
   cursor: pointer;
 `
 
-export default postModifyItem;
+export default PostModifyItem;

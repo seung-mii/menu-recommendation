@@ -1,9 +1,9 @@
 import React from 'react';
-import ModifyItem from './starModifyItem';
+import ModifyItem from './StarModifyItem';
 import styled from "styled-components";
 import { call } from '../../service/ApiService';
 
-class starModify extends React.Component {
+class StarModify extends React.Component {
   constructor(props) { 
     super(props);     
     this.state = { items: [] };
@@ -40,4 +40,4 @@ const Comment = styled.h3`
   text-align: center;
 `
 
-export default starModify;
+export default StarModify;

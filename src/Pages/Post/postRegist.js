@@ -3,7 +3,7 @@ import { call } from '../../service/ApiService';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 
-class Post extends React.Component {
+class PostRegist extends React.Component {
   constructor(props) { 
     super(props);      
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -162,4 +162,4 @@ const Button = styled.button`
   cursor: pointer;
 `
 
-export default Post;
+export default PostRegist;

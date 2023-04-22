@@ -3,7 +3,7 @@ import ModifyItem from './postModifyItem';
 import styled from "styled-components";
 import { call } from '../../service/ApiService';
 
-class postModify extends React.Component {
+class PostModify extends React.Component {
   constructor(props) { 
     super(props);     
     this.state = { items: [] };
@@ -36,4 +36,4 @@ const Comment = styled.h3`
   text-align: center;
 `
 
-export default postModify;
+export default PostModify;
