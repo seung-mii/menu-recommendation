@@ -1,175 +1,69 @@
 import React from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from 'styled-components';
-import rose from '../../images/로제떡볶이.jpeg'
+import { call } from '../../service/ApiService';
+import RestaurantList from './RestaurantList';
+import Signin from '../Member/signin';
 
-function home() {
-  // const movePage = useNavigate();
+class home extends React.Component {
+  constructor(props) {
+    super(props);     
+    this.state = {    
+      items: [],
+      user: []
+    };
+  }
 
-  // function gohome(){
-  //   movePage('/post');
-  // }
-  
-  return (
-    <Container>
-      <Link to="/regist">
-        <RegistBtn>맛집 등록하기</RegistBtn>
-      </Link>
-      <Table $top>
-        <Tr colspan={30}>
-          <Th>맛집</Th>
-          <Th>대표메뉴</Th>
-        </Tr>
-        <Tr>
-          <Td>
-            <Info $title>
-              <Title>배떡</Title>
-              <Star>4점</Star>
-              <Repre>대표자 : 김대표</Repre>
-            </Info>
-            <Info>
-              <Location>경북 구미시 옥계북로 123</Location>
-              <Num>054-344-5264</Num>
-            </Info>
-            <Info $last>
-              <Link to="/rating"><Button>별점 남기기</Button></Link>
-              <Link to="/post"><Button>리뷰 남기기</Button></Link>
-            </Info>
-          </Td>
-          <Td>
-            <Img src={rose}></Img>
-            <Info>
-              <Title>로제떡볶이</Title>
-              <Price>14000원</Price>
-            </Info>
-            <Expl>로제소스가 들어간 떡볶이</Expl>
-          </Td>
-        </Tr>
-        <Tr>
-          <Td>
-            <Info $title>
-              <Title>BHC</Title>
-              <Star>2.5점</Star>
-              <Repre>대표자 : 김대표</Repre>
-            </Info>
-            <Info>
-              <Location>경북 구미시 옥계북로 123</Location>
-              <Num>054-344-5264</Num>
-            </Info>
-            <Info $last>
-              <Link to="/rating"><Button>별점 남기기</Button></Link>
-              <Link to="/post"><Button>리뷰 남기기</Button></Link>
-            </Info>
-          </Td>
-          <Td>
-            <Img src={rose}></Img>
-            <Info>
-              <Title>뿌링클</Title>
-              <Price>20000원</Price>
-            </Info>
-            <Expl>치즈가루가 뿌려진 치킨</Expl>
-          </Td>
-        </Tr>
-        <Tr $last>
-          <Td>
-            <Info $title>
-              <Title>라라코스트</Title>
-              <Star>3.7점</Star>
-              <Repre>대표자 : 김대표</Repre>
-            </Info>
-            <Info>
-              <Location>경북 구미시 옥계북로 123</Location>
-              <Num>054-344-5264</Num>
-            </Info>
-            <Info $last>
-              <Link to="/rating"><Button>별점 남기기</Button></Link>
-              <Link to="/post"><Button>리뷰 남기기</Button></Link>
-            </Info>
-          </Td>
-          <Td>
-            <Img src={rose}></Img>
-            <Info>
-              <Title>크림 파스타</Title>
-              <Price>21000원</Price>
-            </Info>
-            <Expl>크림 소스를 사용한 파스타</Expl>
-          </Td>
-        </Tr>
-      </Table>
-    </Container>
-  );
+  add = (item) => {
+    call("/frestaurant", "POST", item).then((response) => 
+      this.setState({items:response.data})
+    );
+  }
+
+  update = (item) => {
+    call("/frestaurant", "PUT", item).then((response) => 
+      this.setState({items:response.data})
+    );
+  }
+
+  componentDidMount() {
+    call("/auth/user", "GET", null).then((response) =>
+      this.setState({user:response.data})
+    );
+
+    call("/frestaurant", "GET", null).then((response) =>
+      this.setState({items:response.data})
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        {this.state.user.length <= 0 ? (
+            <Signin />
+          ) : (
+            <Container>
+              {this.state.user.length > 0 && this.state.user[0].nickname === null &&
+                <Link to="/regist">
+                  <RegistBtn>맛집 등록하기</RegistBtn>
+                </Link>
+              }
+              {this.state.items.length > 0 &&
+                <RestaurantList item={this.state.items} user={this.state.user[0]} />
+              }
+            </Container>
+          )
+        }
+      </div>
+    ); 
+  }
 }
 
 const Container = styled.div`
   margin: 0px;
-  padding: 0px;
+  padding-top: 40px;
   color: #4a5b51;
 `
-const Info = styled.div`
-  margin: 0px;
-  padding: 0px;
-  display: flex;
-  justify-content: ${ props => {
-    if (props.$last) return "center"
-    else if (props.$title) return "none"
-    else return "space-between"
-  }};
-`
-const Table = styled.table`
-  width: 100%;
-  height: 300px;
-  margin: 0 auto;
-  font-size: 22px;
-  color: #667c6e;
-`
-const Th = styled.th`
-  margin: 0px;
-  padding: 10px;
-  border-top: 2px solid #6c8074;
-  border-bottom: 2px solid #6c8074;
-  border-collapse: collapse;
-  background-color: #bbd6b83b;
-`
-const Tr = styled.tr`
-`
-const Td = styled.td`
-  padding: 10px 20px;
-  font-size: 25px;
-  font-weight: 600;
-  border-bottom: 2px solid #6c8074;
-  cursor: pointer;
-`
-const Title = styled.h3`
-  margin: 0px;
-  padding: 5px 5px 0px 5px;
-`
-const Repre = styled.p`
-  margin: 0px;
-  padding: 10px 5px 5px 5px;
-  font-size: 20px;
-`
-const Star = styled.p`
-  flex-grow: 1;
-  color: red;
-  font-size: 17px;
-  margin-left: 10px;
-`
-const Location = styled.p`
-  margin: 0px;
-  padding: 5px;
-  font-size: 20px;
-`
-const Num = styled(Location)`
-`
-const Expl = styled(Location)`
-`
-const Price = styled(Location)`
-  font-size: 17px;
-`
-const Img = styled.img`
-  width: 200px;
-`
-
 const Button = styled.button`
   color: white;
   background: #6c8074;
@@ -190,9 +84,8 @@ const RegistBtn = styled(Button)`
   height: 55px;
   font-size: 18px;
   border-radius: 10px 10px 0px 0px;
-  margin: 40px 70px 0px 0px;
+  margin: 0px 70px 0px 0px;
 `
-
 
 export default home;
 
