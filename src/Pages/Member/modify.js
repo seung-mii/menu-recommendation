@@ -1,5 +1,5 @@
 import React from 'react';
-import ModifyItem from './ModifyItem';
+import ModifyItem from './modifyItem';
 import { call } from '../../service/ApiService';
 
 class Modify extends React.Component {

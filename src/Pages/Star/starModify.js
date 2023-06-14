@@ -1,5 +1,5 @@
 import React from 'react';
-import ModifyItem from './StarModifyItem';
+import ModifyItem from './starModifyItem';
 import styled from "styled-components";
 import { call } from '../../service/ApiService';
 
